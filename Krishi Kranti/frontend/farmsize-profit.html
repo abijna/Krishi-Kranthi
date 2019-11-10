@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Bokeh</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="icon" href="images/play.png" type="image/png" sizes="16x16">
+		<style>
+			#t_main tbody tr, td{
+				border:none;
+			}
+			#t_main td a{
+				height: 80%;
+				width:80%;
+				margin:5%;
+			}
+			#t_main{
+				margin-left:10%;
+				margin-right:10%
+				margin-top:5%; 
+				padding:10px;
+				height:100px;
+				width:80%;				
+			}
+		</style>
+	</head>
+	<body class="subpage">
+		<header id="header">
+			<h1> Dashboard </h1>
+			<a href="#menu">Menu</a>
+		</header>
+		<nav id="menu">
+			<ul class="links">
+				<li><a href="index.html">Logout</a></li>
+				<li><a href="profile.html">Profile</a></li>
+			</ul>
+		</nav>
+		
+		<section class="wrapper style1">
+			<div class="inner">
+				<div class="12u$" id="textbox">
+					<div>
+						<h4>Farmer's Id<h5>
+						
+							<input type="text" id="farmerid" name="farmerid" value="" placeholder="Enter farmer's id"></input>
+						
+					</div>
+				</div>
+			
+				<div class="12u$" >
+					<div>
+						<center><button style="width:100px" id="submit">Submit</button></center>
+					</div>
+				</div>
+				<br><br>
+				<div id="container" style="width: 100%; height: 100%"></div>
+				<br>
+				<div id="list">
+				</div>
+			</div>
+		</section>
+	</body>
+	
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/skel.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+	<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
+	<script type="text/javascript">
+	document.getElementById("submit").onclick = function() { 
+		farmer_id = document.getElementById("farmerid").value;
+		
+		var data = new Object();
+		var list=document.getElementById("list");
+			data['farmer_id'] = farmer_id;
+			
+			$.ajax({
+				type: 'POST',
+				url: 'http://localhost:5000/comparison_on_farmsize/',
+				data: JSON.stringify(data) ,
+				contentType: "application/json",
+				success:function(res) {
+					list.innerHTML="";
+					var style1="background-color:#062038;margin:1%;padding:1%";
+					var style2="background-color:#041321;margin:1%;padding:1%";
+					var styl=style1;	
+					var filter=0;
+					for(var r in res){
+						var sec = document.createElement("section");
+						sec.setAttribute("style",styl);
+						if(styl==style1){ styl=style2 }else {styl=style1};
+						sec.appendChild(document.createElement("br"));
+						sec.appendChild(document.createElement("h1").appendChild(document.createTextNode("FARMER NAME : "+res[r]["farmer_name"])));
+						sec.appendChild(document.createElement("br"));
+						sec.appendChild(document.createElement("h4").appendChild(document.createTextNode("RATINGS : "+res[r]["farmerrating"])));
+						sec.appendChild(document.createElement("br"));
+						cnt=1;
+						for(var pr in res[r]["products"]){
+						
+						var inn=document.createElement("section");
+						inn.setAttribute("style",styl);
+						
+						
+						inn.appendChild(document.createElement("h6").appendChild(document.createTextNode(cnt.toString()+") PRODUCT NAME : "+res[r]["products"][pr]["product_name"])));
+						inn.appendChild(document.createElement("br"));
+						inn.appendChild(document.createElement("h6").appendChild(document.createTextNode(" DESCRIPTION : "+res[r]["products"][pr]["Description"])));
+						inn.appendChild(document.createElement("br"));
+						inn.appendChild(document.createElement("h3").appendChild(document.createTextNode(" PRICE : ₹"+res[r]["products"][pr]["price"]+"/kg ")));
+						inn.appendChild(document.createElement("br"));
+						inn.appendChild(document.createElement("h3").appendChild(document.createTextNode(" RATINGS : ₹"+res[r]["products"][pr]["rating"]+"/kg ")));
+						inn.appendChild(document.createElement("br"));
+						sec.appendChild(inn);
+						cnt+=1;
+						}
+
+						list.appendChild(sec);
+						list.appendChild(document.createElement("br"));
+						
+					}
+					/*
+					anychart.onDocumentReady(function() {
+				 
+						// create the chart
+						var chart = anychart.column();
+				 
+						// add the data
+						chart.data(data);
+				 
+						// set the chart title
+						chart.title("Product Price Comparison");
+				 
+						// draw
+						chart.container("container");
+						chart.draw();
+					  });
+					
+					list.innerHTML="";
+					var style1="background-color:#062038;margin:1%";
+					var style2="background-color:#041321;margin:1%";
+					var styl=style1;	
+					var filter=0;
+					for (var r in res){
+						var sec = document.createElement("section");
+						sec.setAttribute("style",styl);
+						if(styl==style1){ styl=style2 }else {styl=style1};
+						sec.appendChild(document.createElement("br"));
+						sec.appendChild(document.createElement("h1").appendChild(document.createTextNode("FARMER NAME : "+res[r]["farmer_name"])));
+						sec.appendChild(document.createElement("br"));
+						sec.appendChild(document.createElement("h6").appendChild(document.createTextNode("DESCRIPTION : "+res[r]["description"])));
+						sec.appendChild(document.createElement("br"));
+						sec.appendChild(document.createElement("h3").appendChild(document.createTextNode("PRICE : ₹"+res[r]["price"]+"/kg ")));
+						sec.appendChild(document.createElement("br"));
+						sec.appendChild(document.createElement("h4").appendChild(document.createTextNode("RATINGS : "+res[r]["product_rating"])));
+						sec.appendChild(document.createElement("br"));
+
+						list.appendChild(sec);
+						list.appendChild(document.createElement("br"));
+					}*/
+				}
+			});
+		}
+
+	</script>
+	
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Bokeh</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="icon" href="images/play.png" type="image/png" sizes="16x16">
+		<style>
+			#t_main tbody tr, td{
+				border:none;
+			}
+			#t_main td a{
+				height: 80%;
+				width:80%;
+				margin:5%;
+			}
+			#t_main{
+				margin-left:10%;
+				margin-right:10%
+				margin-top:5%; 
+				padding:10px;
+				height:100px;
+				width:80%;				
+			}
+		</style>
+	</head>
+	<body class="subpage">
+		<header id="header">
+			<h1> Dashboard </h1>
+			<a href="#menu">Menu</a>
+		</header>
+		<nav id="menu">
+			<ul class="links">
+				<li><a href="index.html">Logout</a></li>
+				<li><a href="profile.html">Profile</a></li>
+			</ul>
+		</nav>
+		
+		<section class="wrapper style1">
+			<div class="inner">
+				<div class="12u$" id="textbox">
+					<div>
+						<h3>Weather Prediction<h3>
+						
+					</div>
+				</div>
+			
+				<div class="12u$" >
+					<div>
+						<center><button style="width:100px" id="submit">Submit</button></center>
+					</div>
+				</div>
+				<br><br>
+				<div id="container" style="width: 100%; height: 100%"></div>
+				<br>
+				<div id="list">
+				</div>
+			</div>
+		</section>
+	</body>
+	
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/skel.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+	<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
+	<script type="text/javascript">
+		latitude=""
+		longitude=""
+		function getLocation() {
+		  if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(showPosition);
+		  } else {
+			x.innerHTML = "Geolocation is not supported by this browser.";
+		  }
+		}
+		function showPosition(position) {
+		  latitude=position.coords.latitude;
+		  longitude=position.coords.longitude;
+		}
+		getLocation();
+		function getWeather(){
+			var settings = {
+				"async": true,
+				"crossDomain": true,
+				"url": "api.openweathermap.org/data/2.5/forecast?lang=en&lat="+latitude+"&lon="+longitude,
+				"method": "GET",
+				"headers": {
+					
+				}
+			}
+
+			$.ajax(settings).done(function (response) {
+				console.log(response);
+			});
+		}
+		getWeather();
+	</script>
+</html>
